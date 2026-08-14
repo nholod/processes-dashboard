@@ -15,10 +15,19 @@
   header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px}
   h1{font-size:22px;font-weight:700}
   .updated{color:var(--muted);font-size:12px}
-  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
   .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 14px;display:flex;align-items:center;gap:8px}
   .stat b{font-size:18px}
   .stat span{color:var(--muted);font-size:12px}
+
+  /* ===== ФИЛЬТР ПО АГЕНТАМ ===== */
+  .agent-filter{display:flex;align-items:center;flex-wrap:wrap;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:18px}
+  .agent-filter .af-title{font-size:13px;font-weight:650;color:var(--fg);margin-right:4px}
+  .agent-filter button{background:var(--panel2);border:1px solid var(--line);color:var(--fg);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:12px;transition:.15s}
+  .agent-filter button:hover{border-color:var(--blue)}
+  .agent-filter button.on{background:var(--blue);border-color:var(--blue);color:#0f172a;font-weight:600}
+  .agent-filter .af-clear{margin-left:auto;font-size:12px;color:var(--muted);cursor:pointer;background:none;border:none}
+  .agent-filter .af-clear:hover{color:var(--red)}
 
   /* ===== КАНБАН ===== */
   .kanban-scroll{overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch}
@@ -74,6 +83,7 @@
   </header>
 
   <div class="stats" id="stats"></div>
+  <div class="agent-filter" id="agentFilter"></div>
   <div class="kanban-scroll"><div class="kanban" id="kanban"></div></div>
 
   <footer>Автообновление данных: ежедневно 07:15 · GitHub Pages · генерируется продюсером команды</footer>
@@ -93,7 +103,19 @@ const STATUSES = [
   {key:'active',    label:'В работе',  color:'var(--green)',  badge:'active'},
   {key:'completed', label:'Завершены', color:'var(--blue)',   badge:'completed'},
 ];
+const AGENTS = [
+  {id:'producer',  label:'🎬 Продюсер',  short:'Продюсер'},
+  {id:'scout',     label:'🔭 Scout',     short:'Scout'},
+  {id:'smm',       label:'📣 SMM',       short:'SMM'},
+  {id:'analyst',   label:'📊 Аналитик',  short:'Аналитик'},
+  {id:'financier', label:'💰 Финансист', short:'Финансист'},
+  {id:'editor',    label:'✍️ Брайн',     short:'Брайн'},
+  {id:'assistant', label:'🤝 Ассистент', short:'Ассистент'},
+  {id:'main',      label:'🧠 Бос',       short:'Бос'},
+  {id:'security',  label:'🔐 Security',  short:'Security'},
+];
 let DATA = {processes:[]};
+let agentFilter = 'all';
 
 async function load(){
   try{
@@ -113,22 +135,47 @@ function render(){
     `<div class="stat"><span style="width:10px;height:10px;border-radius:50%;background:${s.color};display:inline-block"></span><b style="color:${s.color}">${counts[s.key]||0}</b><span>${s.label}</span></div>`
   ).join('') + `<div class="stat"><b>${DATA.processes.length}</b><span>Всего</span></div>`;
 
+  // фильтр по агентам
+  const visible = agentFilter==='all'
+    ? DATA.processes
+    : DATA.processes.filter(p => (p.agents||[]).includes(agentFilter));
+  const agCounts = {active:0, pending:0, completed:0};
+  visible.forEach(p => agCounts[p.status] = (agCounts[p.status]||0)+1);
+
+  const afBtns = `<span class="af-title">👤 Агент:</span>` +
+    AGENTS.map(a => {
+      const n = DATA.processes.filter(p => (p.agents||[]).includes(a.id)).length;
+      return `<button class="${agentFilter===a.id?'on':''}" onclick="setAgent('${a.id}')" title="${a.label}">${a.short} (${n})</button>`;
+    }).join('') +
+    (agentFilter!=='all' ? `<button class="af-clear" onclick="setAgent('all')">✕ сбросить</button>` : '');
+  document.getElementById('agentFilter').innerHTML = afBtns;
+
+  const heading = agentFilter==='all'
+    ? ''
+    : ` — задачи агента <b>${(AGENTS.find(a=>a.id===agentFilter)||{}).label||agentFilter}</b>`;
+
   document.getElementById('kanban').innerHTML = STATUSES.map(s => `
     <div class="col ${s.key}">
-      <div class="col-head"><span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:${s.color};display:inline-block"></span>${s.label}</span><span class="count">${counts[s.key]||0}</span></div>
-      ${DATA.processes.filter(p=>p.status===s.key).map(cardHtml).join('') || '<p style="color:var(--muted);font-size:12px;padding:8px">Пусто</p>'}
+      <div class="col-head"><span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:${s.color};display:inline-block"></span>${s.label}${heading}</span><span class="count">${agCounts[s.key]||0}</span></div>
+      ${visible.filter(p=>p.status===s.key).map(cardHtml).join('') || '<p style="color:var(--muted);font-size:12px;padding:8px">Пусто</p>'}
     </div>
   `).join('');
+}
+function setAgent(id){
+  agentFilter = id;
+  render();
 }
 function cardHtml(p){
   const b = STATUSES.find(s=>s.key===p.status);
   const t = p.type==='group'
     ? '<span class="type-tag group">👥 Командный</span>'
     : '<span class="type-tag individual">🧑‍💻 Индивидуальный</span>';
+  const ags = (p.agents||[]).map(a => (AGENTS.find(x=>x.id===a)||{short:a}).short).join(', ');
   return `<div class="card" onclick="openModal('${p.id}')" title="Открыть описание">
     <div class="top"><span class="name">${p.icon||'•'} ${p.name}</span><span class="badge ${b.badge}">${b.label}</span></div>
     ${p.desc ? `<div class="desc">${p.desc}</div>` : ''}
     ${t}
+    <div class="row" style="margin-top:6px;font-size:11px;color:var(--muted)">👤 <b style="color:var(--fg)">Агенты:</b> ${ags || '—'}</div>
     <div class="meta">
       <div class="row">🕐 <b>Расписание:</b> ${p.schedule}</div>
       <div class="row">✅ <b>Последний запуск:</b> ${p.last}</div>
@@ -158,6 +205,7 @@ function openModal(id){
       <div class="cell"><div class="m-label">🎯 Цель</div><div class="m-text">${p.goal || '—'}</div></div>
       <div class="cell"><div class="m-label">👤 Ответственный</div><div class="m-text">${p.owner || '—'}</div></div>
       <div class="cell"><div class="m-label">🔗 Цепочка</div><div class="m-text">${p.chain}</div></div>
+      <div class="cell"><div class="m-label">👥 Агенты-участники</div><div class="m-text">${(p.agents||[]).map(a => (AGENTS.find(x=>x.id===a)||{label:a}).label).join(', ') || '—'}</div></div>
       <div class="cell"><div class="m-label">✅ Последний запуск</div><div class="m-text">${p.last}</div></div>
       <div class="cell"><div class="m-label">⏭ Следующий</div><div class="m-text">${p.next}</div></div>
     </div>
