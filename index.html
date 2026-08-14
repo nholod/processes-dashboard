@@ -21,8 +21,9 @@
   .stat span{color:var(--muted);font-size:12px}
 
   /* ===== КАНБАН ===== */
-  .kanban{display:grid;grid-template-columns:repeat(3,minmax(300px,1fr));gap:16px;align-items:start}
-  @media (max-width:1024px){.kanban{grid-template-columns:1fr}}
+  .kanban-scroll{overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch}
+  .kanban{display:grid;grid-template-columns:repeat(3,minmax(320px,1fr));gap:16px;align-items:start;min-width:1020px}
+  @media (max-width:1024px){.kanban{min-width:1020px}}
   .col{background:rgba(30,41,59,.55);border:1px solid var(--line);border-radius:14px;padding:12px;min-height:200px}
   .col-head{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 14px;font-weight:700;font-size:15px}
   .col-head .count{background:var(--panel2);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--muted)}
@@ -53,7 +54,7 @@
   </header>
 
   <div class="stats" id="stats"></div>
-  <div class="kanban" id="kanban"></div>
+  <div class="kanban-scroll"><div class="kanban" id="kanban"></div></div>
 
   <footer>Автообновление данных: ежедневно 07:15 · GitHub Pages · генерируется продюсером команды</footer>
 </div>
