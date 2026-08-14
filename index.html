@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Командный дашборд процессов</title>
+<style>
+  :root{
+    --bg:#0f172a; --panel:#1e293b; --panel2:#273449; --fg:#e2e8f0; --muted:#94a3b8;
+    --line:#334155; --green:#34d399; --yellow:#fbbf24; --blue:#60a5fa; --gray:#64748b; --red:#f87171;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:20px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+  h1{font-size:22px;font-weight:700}
+  .updated{color:var(--muted);font-size:12px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .stat b{display:block;font-size:26px;line-height:1.1}
+  .stat span{color:var(--muted);font-size:12px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .filters button{background:var(--panel);border:1px solid var(--line);color:var(--fg);border-radius:999px;padding:7px 16px;cursor:pointer;font-size:13px;transition:.15s}
+  .filters button:hover{border-color:var(--blue)}
+  .filters button.on{background:var(--blue);border-color:var(--blue);color:#0f172a;font-weight:600}
+  .section{margin-bottom:26px}
+  .section h2{font-size:15px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;transition:.15s}
+  .card:hover{border-color:var(--blue);transform:translateY(-1px)}
+  .card .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .card .name{font-weight:650;font-size:14px}
+  .badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
+  .badge.active{background:rgba(52,211,153,.15);color:var(--green)}
+  .badge.pending{background:rgba(251,191,36,.15);color:var(--yellow)}
+  .badge.completed{background:rgba(96,165,250,.15);color:var(--blue)}
+  .card .row{color:var(--muted);font-size:12.5px}
+  .card .row b{color:var(--fg);font-weight:600}
+  .hidden{display:none!important}
+  footer{color:var(--muted);font-size:12px;margin-top:24px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🗂 Командный дашборд процессов</h1>
+    <div class="updated" id="updated">загрузка…</div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="filters" id="filters"></div>
+
+  <div id="content"></div>
+
+  <footer>Автообновление данных: ежедневно · GitHub Pages · генерируется продюсером команды</footer>
+</div>
+
+<script>
+const STATUSES = [
+  {key:'active',    label:'В работе',      dot:'var(--green)',  badge:'active'},
+  {key:'pending',   label:'Ожидают',       dot:'var(--yellow)', badge:'pending'},
+  {key:'completed', label:'Завершены',     dot:'var(--blue)',   badge:'completed'},
+];
+let DATA = {processes:[]};
+let filter = 'all';
+
+async function load(){
+  try{
+    const r = await fetch('data/processes.json', {cache:'no-store'});
+    DATA = await r.json();
+  }catch(e){
+    document.getElementById('content').innerHTML = '<p style="color:var(--red)">Не удалось загрузить данные.</p>';
+    return;
+  }
+  render();
+}
+function render(){
+  document.getElementById('updated').textContent = 'Обновлено: ' + (DATA.generated_at || '—');
+
+  const counts = {active:0, pending:0, completed:0};
+  DATA.processes.forEach(p => counts[p.status] = (counts[p.status]||0)+1);
+  const statsHtml = STATUSES.map(s =>
+    `<div class="stat"><span>${s.label}</span><b style="color:${s.dot}">${counts[s.key]||0}</b></div>`
+  ).join('') + `<div class="stat"><span>Всего</span><b>${DATA.processes.length}</b></div>`;
+  document.getElementById('stats').innerHTML = statsHtml;
+
+  const filtersHtml = `<button class="${filter==='all'?'on':''}" onclick="setFilter('all')">Все (${DATA.processes.length})</button>` +
+    STATUSES.map(s => `<button class="${filter===s.key?'on':''}" onclick="setFilter('${s.key}')">${s.label} (${counts[s.key]||0})</button>`).join('');
+  document.getElementById('filters').innerHTML = filtersHtml;
+
+  const groups = STATUSES.map(s => ({
+    ...s,
+    items: DATA.processes.filter(p => p.status===s.key)
+  }));
+
+  document.getElementById('content').innerHTML = groups.map(g => `
+    <div class="section" id="sec-${g.key}">
+      <h2><span class="dot" style="background:${g.dot}"></span>${g.label} · ${g.items.length}</h2>
+      <div class="cards">${g.items.map(cardHtml).join('')}</div>
+    </div>
+  `).join('');
+
+  applyFilter();
+}
+function cardHtml(p){
+  const b = STATUSES.find(s=>s.key===p.status);
+  return `<div class="card">
+    <div class="top"><span class="name">${p.icon||'•'} ${p.name}</span><span class="badge ${b.badge}">${b.label}</span></div>
+    <div class="row">🕐 <b>Расписание:</b> ${p.schedule}</div>
+    <div class="row">🔗 <b>Цепочка:</b> ${p.chain}</div>
+    <div class="row">✅ <b>Последний запуск:</b> ${p.last}</div>
+    <div class="row">⏭ <b>Следующий:</b> ${p.next}</div>
+  </div>`;
+}
+function setFilter(f){ filter=f; render(); }
+function applyFilter(){
+  STATUSES.forEach(s=>{
+    const el = document.getElementById('sec-'+s.key);
+    if(el) el.classList.toggle('hidden', filter!=='all' && filter!==s.key);
+  });
+}
+load();
+</script>
+</body>
+</html>

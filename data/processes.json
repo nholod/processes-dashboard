@@ -1,0 +1,32 @@
+{
+  "generated_at": "2026-08-14T11:55:00+03:00",
+  "summary": {
+    "active": 10,
+    "pending": 4,
+    "completed": 6
+  },
+  "processes": [
+    {"id": "bonds-monitor", "name": "Мониторинг цен облигаций", "status": "active", "icon": "📡", "schedule": "Каждые 2 ч (07:00 / 13:00 / 19:00)", "chain": "scout → финансист → алерт Алексею", "last": "14.08 13:44 — ok", "next": "Сегодня 13:00 (след. цикл)"},
+    {"id": "bonds-weekly", "name": "Размещения облигаций за неделю", "status": "active", "icon": "📅", "schedule": "Вс 18:00", "chain": "финансист → рекомендации → Алексей", "last": "10.08 — ok", "next": "16.08 18:00"},
+    {"id": "bonds-monthly", "name": "Ежемесячный анализ облигаций", "status": "active", "icon": "📈", "schedule": "10-е число", "chain": "финансист → Брайн (доклад PDF) → Алексей", "last": "10.08 — ok", "next": "10.09"},
+    {"id": "fin-monthly-1", "name": "Ежемесячный анализ финансов", "status": "active", "icon": "💰", "schedule": "10-е число", "chain": "финансист → Брайн (доклад PDF) → Алексей", "last": "10.08 — ok", "next": "10.09"},
+    {"id": "fin-monthly-2", "name": "Ежемесячный анализ накоплений", "status": "active", "icon": "📊", "schedule": "10-е число", "chain": "финансист → Брайн (доклад PDF) → Алексей", "last": "10.08 — ok", "next": "10.09"},
+    {"id": "arm-daily", "name": "Ведомственный мониторинг: ежедневный сбор", "status": "active", "icon": "🌙", "schedule": "Ежедневно 02:00", "chain": "scout → аналитик (таблица)", "last": "14.08 02:00 — ok", "next": "15.08 02:00"},
+    {"id": "smm-content", "name": "Контент-цикл соцсетей (ТГ/Дзен/ВК)", "status": "active", "icon": "🔭", "schedule": "Сб 09:00", "chain": "scout → SMM → Брайн (редактура) → согласование → автопубликация", "last": "10.08 — ok", "next": "15.08 09:00"},
+    {"id": "smm-pulse", "name": "Пульс соцсетей (подписчики/охваты)", "status": "active", "icon": "📈", "schedule": "Ежедневно 08:30", "chain": "SMM → SQLite smm_daily", "last": "Новый, стартует 15.08", "next": "15.08 08:30"},
+    {"id": "legal-research", "name": "Ресерч юридических ниш и банкротства", "status": "active", "icon": "🔭", "schedule": "Пт 09:00", "chain": "scout → продюсер → Алексей", "last": "14.08 09:00 — ok (ручной запуск)", "next": "21.08 09:00"},
+    {"id": "weekly-meeting", "name": "Еженедельное совещание команды", "status": "active", "icon": "🗓", "schedule": "Еженедельно", "chain": "все агенты → продюсер", "last": "13.08 — ok", "next": "16.08"},
+
+    {"id": "smm-analysis", "name": "Анализ соцсетей за неделю (KPI, A/B-тесты)", "status": "pending", "icon": "📊", "schedule": "Пн 10:00", "chain": "SMM → аналитик (SQLite smm_weekly) → Алексей", "last": "Первый запуск 17.08", "next": "17.08 10:00"},
+    {"id": "arm-weekly", "name": "Ведомственный мониторинг: недельный доклад", "status": "pending", "icon": "🗂", "schedule": "Вс 21:00", "chain": "аналитик → Брайн → доклад", "last": "Первый запуск 16.08", "next": "16.08 21:00"},
+    {"id": "pcf-control", "name": "Контроль дефолтной бумаги (техдефолт)", "status": "pending", "icon": "⏰", "schedule": "24.08 (разовый)", "chain": "финансист → продюсер → Алексей", "last": "—", "next": "24.08"},
+    {"id": "lead-magnet", "name": "Лид-магнит: PDF-памятка для закрепов", "status": "pending", "icon": "📚", "schedule": "В работе, к запуску", "chain": "Брайн → SMM (закреп ТГ/ВК)", "last": "—", "next": "Эта неделя"},
+
+    {"id": "smm-v2", "name": "Внедрение SMM Вариант 2 (команда + KPI)", "status": "completed", "icon": "✅", "schedule": "Завершено 14.08", "chain": "регламент, кроны, роли, пульс", "last": "14.08 — внедрено", "next": "—"},
+    {"id": "legal-research-1", "name": "Ресерч юр-ниш и банкротства (1-й цикл)", "status": "completed", "icon": "✅", "schedule": "Завершено 13.08", "chain": "топ-5 ниш + план 7 шагов", "last": "13.08 — принят", "next": "—"},
+    {"id": "baltliz", "name": "Разбор эмитента БалтЛизП24", "status": "completed", "icon": "✅", "schedule": "Завершено 13.08", "chain": "scout → вердикт + мониторинг", "last": "13.08 — принят", "next": "—"},
+    {"id": "dzen-cta", "name": "Обновление CTA-шаблона Дзен", "status": "completed", "icon": "✅", "schedule": "Завершено 13.08", "chain": "regex @yanapravo + новые шаблоны", "last": "13.08 — принят", "next": "—"},
+    {"id": "smm-base", "name": "База KPI соцсетей + рубрики + банк идей", "status": "completed", "icon": "✅", "schedule": "Завершено 14.08", "chain": "SMM: 164 ТГ / 2 Дзен / 1 ВК, 33 идеи", "last": "14.08 — принят", "next": "—"},
+    {"id": "v2-scheme", "name": "Схема Варианта 2 (PDF-диаграмма)", "status": "completed", "icon": "✅", "schedule": "Завершено 14.08", "chain": "продюсер → PDF", "last": "14.08 — готово", "next": "—"}
+  ]
+}
