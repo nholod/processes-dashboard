@@ -39,6 +39,9 @@
   .badge.active{background:rgba(52,211,153,.15);color:var(--green)}
   .badge.pending{background:rgba(251,191,36,.15);color:var(--yellow)}
   .badge.completed{background:rgba(96,165,250,.15);color:var(--blue)}
+  .type-tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap;margin-top:8px}
+  .type-tag.group{background:rgba(167,139,250,.15);color:#c4b5fd;border:1px solid rgba(167,139,250,.3)}
+  .type-tag.individual{background:rgba(148,163,184,.15);color:#94a3b8;border:1px solid rgba(148,163,184,.3)}
   .card .desc{color:#cbd5e1;font-size:12.5px;margin-bottom:10px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .card .meta{display:flex;flex-direction:column;gap:4px;border-top:1px dashed var(--line);padding-top:8px}
   .card .row{color:var(--muted);font-size:12px}
@@ -119,9 +122,13 @@ function render(){
 }
 function cardHtml(p){
   const b = STATUSES.find(s=>s.key===p.status);
+  const t = p.type==='group'
+    ? '<span class="type-tag group">👥 Командный</span>'
+    : '<span class="type-tag individual">🧑‍💻 Индивидуальный</span>';
   return `<div class="card" onclick="openModal('${p.id}')" title="Открыть описание">
     <div class="top"><span class="name">${p.icon||'•'} ${p.name}</span><span class="badge ${b.badge}">${b.label}</span></div>
     ${p.desc ? `<div class="desc">${p.desc}</div>` : ''}
+    ${t}
     <div class="meta">
       <div class="row">🕐 <b>Расписание:</b> ${p.schedule}</div>
       <div class="row">✅ <b>Последний запуск:</b> ${p.last}</div>
@@ -137,6 +144,9 @@ function openModal(id){
     <div class="m-icon">${p.icon||'•'}</div>
     <div class="m-title">${p.name}</div>
     <span class="m-badge ${b.badge}" style="background:${b.color}22;color:${b.color}">${b.label}</span>
+    ${p.type==='group'
+      ? '<span class="m-badge" style="background:rgba(167,139,250,.15);color:#c4b5fd;margin-left:6px">👥 Командный (агенты под управлением продюсера)</span>'
+      : '<span class="m-badge" style="background:rgba(148,163,184,.15);color:#94a3b8;margin-left:6px">🧑‍💻 Индивидуальный крон агента</span>'}
 
     <div class="m-block">
       <div class="m-label">Описание</div>
