@@ -51,6 +51,10 @@
   .type-tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap;margin-top:8px}
   .type-tag.group{background:rgba(167,139,250,.15);color:#c4b5fd;border:1px solid rgba(167,139,250,.3)}
   .type-tag.individual{background:rgba(148,163,184,.15);color:#94a3b8;border:1px solid rgba(148,163,184,.3)}
+  .runner-tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap;margin-top:8px;margin-left:6px}
+  .runner-tag.cron{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3)}
+  .runner-tag.script{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
+  .runner-tag.task{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
   .card .desc{color:#cbd5e1;font-size:12.5px;margin-bottom:10px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .card .meta{display:flex;flex-direction:column;gap:4px;border-top:1px dashed var(--line);padding-top:8px}
   .card .row{color:var(--muted);font-size:12px}
@@ -84,6 +88,7 @@
 
   <div class="stats" id="stats"></div>
   <div class="agent-filter" id="agentFilter"></div>
+  <div class="agent-filter" id="runnerFilter"></div>
   <div class="kanban-scroll"><div class="kanban" id="kanban"></div></div>
 
   <footer>Автообновление данных: ежедневно 07:15 · GitHub Pages · генерируется продюсером команды</footer>
@@ -114,8 +119,16 @@ const AGENTS = [
   {id:'main',      label:'🧠 Бос',       short:'Бос'},
   {id:'security',  label:'🔐 Security',  short:'Security'},
 ];
+const RUNNERS = [
+  {id:'all',    label:'Все'},
+  {id:'cron',   label:'🔄 Кроны'},
+  {id:'script', label:'⚙️ Скрипты'},
+  {id:'task',   label:'📋 Задачи'},
+];
+const RUNNER_LABEL = {cron:'🔄 Крон (OpenClaw, LLM)', script:'⚙️ Скрипт (crontab, без LLM)', task:'📋 Задача (ручная/разовая)'};
 let DATA = {processes:[]};
 let agentFilter = 'all';
+let runnerFilter = 'all';
 
 async function load(){
   try{
@@ -135,10 +148,10 @@ function render(){
     `<div class="stat"><span style="width:10px;height:10px;border-radius:50%;background:${s.color};display:inline-block"></span><b style="color:${s.color}">${counts[s.key]||0}</b><span>${s.label}</span></div>`
   ).join('') + `<div class="stat"><b>${DATA.processes.length}</b><span>Всего</span></div>`;
 
-  // фильтр по агентам
-  const visible = agentFilter==='all'
-    ? DATA.processes
-    : DATA.processes.filter(p => (p.agents||[]).includes(agentFilter));
+  // фильтр по агентам + типу запуска
+  let visible = DATA.processes;
+  if (agentFilter!=='all') visible = visible.filter(p => (p.agents||[]).includes(agentFilter));
+  if (runnerFilter!=='all') visible = visible.filter(p => (p.runner||'task')===runnerFilter);
   const agCounts = {active:0, pending:0, completed:0};
   visible.forEach(p => agCounts[p.status] = (agCounts[p.status]||0)+1);
 
@@ -149,6 +162,15 @@ function render(){
     }).join('') +
     (agentFilter!=='all' ? `<button class="af-clear" onclick="setAgent('all')">✕ сбросить</button>` : '');
   document.getElementById('agentFilter').innerHTML = afBtns;
+
+  // фильтр по типу запуска (крон/скрипт/задача)
+  const rfBtns = `<span class="af-title">⚙️ Тип запуска:</span>` +
+    RUNNERS.map(r => {
+      const n = r.id==='all' ? DATA.processes.length : DATA.processes.filter(p => (p.runner||'task')===r.id).length;
+      return `<button class="${runnerFilter===r.id?'on':''}" onclick="setRunner('${r.id}')">${r.label} (${n})</button>`;
+    }).join('') +
+    (runnerFilter!=='all' ? `<button class="af-clear" onclick="setRunner('all')">✕ сбросить</button>` : '');
+  document.getElementById('runnerFilter').innerHTML = rfBtns;
 
   const heading = agentFilter==='all'
     ? ''
@@ -165,16 +187,21 @@ function setAgent(id){
   agentFilter = id;
   render();
 }
+function setRunner(id){
+  runnerFilter = id;
+  render();
+}
 function cardHtml(p){
   const b = STATUSES.find(s=>s.key===p.status);
   const t = p.type==='group'
     ? '<span class="type-tag group">👥 Командный</span>'
     : '<span class="type-tag individual">🧑‍💻 Индивидуальный</span>';
+  const rt = `<span class="runner-tag ${p.runner||'task'}">${RUNNER_LABEL[p.runner||'task']}</span>`;
   const ags = (p.agents||[]).map(a => (AGENTS.find(x=>x.id===a)||{short:a}).short).join(', ');
   return `<div class="card" onclick="openModal('${p.id}')" title="Открыть описание">
     <div class="top"><span class="name">${p.icon||'•'} ${p.name}</span><span class="badge ${b.badge}">${b.label}</span></div>
     ${p.desc ? `<div class="desc">${p.desc}</div>` : ''}
-    ${t}
+    ${t}${rt}
     <div class="row" style="margin-top:6px;font-size:11px;color:var(--muted)">👤 <b style="color:var(--fg)">Агенты:</b> ${ags || '—'}</div>
     <div class="meta">
       <div class="row">🕐 <b>Расписание:</b> ${p.schedule}</div>
@@ -204,6 +231,7 @@ function openModal(id){
       <div class="cell"><div class="m-label">🕐 Расписание</div><div class="m-text">${p.schedule}</div></div>
       <div class="cell"><div class="m-label">🎯 Цель</div><div class="m-text">${p.goal || '—'}</div></div>
       <div class="cell"><div class="m-label">👤 Ответственный</div><div class="m-text">${p.owner || '—'}</div></div>
+      <div class="cell"><div class="m-label">⚙️ Тип запуска</div><div class="m-text">${RUNNER_LABEL[p.runner||'task'] || '—'}</div></div>
       <div class="cell"><div class="m-label">🔗 Цепочка</div><div class="m-text">${p.chain}</div></div>
       <div class="cell"><div class="m-label">👥 Агенты-участники</div><div class="m-text">${(p.agents||[]).map(a => (AGENTS.find(x=>x.id===a)||{label:a}).label).join(', ') || '—'}</div></div>
       <div class="cell"><div class="m-label">✅ Последний запуск</div><div class="m-text">${p.last}</div></div>
