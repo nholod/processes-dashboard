@@ -15,6 +15,11 @@
   header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px}
   h1{font-size:22px;font-weight:700}
   .updated{color:var(--muted);font-size:12px}
+  .page-nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .page-nav a{background:var(--panel);border:1px solid var(--line);color:var(--fg);border-radius:10px;padding:9px 14px;text-decoration:none;font-weight:650}
+  .page-nav a:hover{border-color:var(--blue)}
+  .page-nav a.on{background:var(--blue);border-color:var(--blue);color:#0f172a}
+  .page-note{color:var(--muted);font-size:13px;margin:-7px 0 16px}
   .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
   .stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 14px;display:flex;align-items:center;gap:8px}
   .stat b{font-size:18px}
@@ -31,13 +36,15 @@
 
   /* ===== КАНБАН ===== */
   .kanban-scroll{overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch}
-  .kanban{display:grid;grid-template-columns:repeat(3,minmax(320px,1fr));gap:16px;align-items:start;min-width:1020px}
+  .kanban{display:grid;grid-template-columns:repeat(5,minmax(330px,1fr));gap:16px;align-items:start;min-width:1714px}
   .col{background:rgba(30,41,59,.55);border:1px solid var(--line);border-radius:14px;padding:12px;min-height:200px}
   .col-head{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 14px;font-weight:700;font-size:15px}
   .col-head .count{background:var(--panel2);border-radius:999px;padding:2px 10px;font-size:12px;color:var(--muted)}
-  .col.active{border-top:3px solid var(--green)}
-  .col.pending{border-top:3px solid var(--yellow)}
-  .col.completed{border-top:3px solid var(--blue)}
+  .col.direction-fssp{border-top:3px solid #2563eb}
+  .col.direction-securities{border-top:3px solid #fbbf24}
+  .col.direction-yana{border-top:3px solid #22c55e}
+  .col.direction-personal{border-top:3px solid #38bdf8}
+  .col.direction-system{border-top:3px solid #94a3b8}
 
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;transition:.15s;box-shadow:0 1px 3px rgba(0,0,0,.25);cursor:pointer}
   .card:hover{border-color:var(--blue);transform:translateY(-1px)}
@@ -55,7 +62,20 @@
   .runner-tag.cron{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3)}
   .runner-tag.script{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
   .runner-tag.task{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
+  .direction-tag{display:inline-flex;align-items:center;font-size:10.5px;font-weight:650;padding:2px 9px;border-radius:999px;white-space:nowrap;margin-top:8px;margin-left:6px}
+  .direction-tag.fssp{background:rgba(37,99,235,.18);color:#93c5fd;border:1px solid rgba(37,99,235,.55)}
+  .direction-tag.securities{background:rgba(251,191,36,.16);color:#fde68a;border:1px solid rgba(251,191,36,.5)}
+  .direction-tag.yana{background:rgba(34,197,94,.16);color:#86efac;border:1px solid rgba(34,197,94,.5)}
+  .direction-tag.personal{background:rgba(56,189,248,.16);color:#7dd3fc;border:1px solid rgba(56,189,248,.5)}
+  .direction-tag.system{background:rgba(148,163,184,.13);color:#cbd5e1;border:1px solid rgba(148,163,184,.4)}
+  .card.direction-fssp{border-left:4px solid #2563eb}
+  .card.direction-securities{border-left:4px solid #fbbf24}
+  .card.direction-yana{border-left:4px solid #22c55e}
+  .card.direction-personal{border-left:4px solid #38bdf8}
+  .card.direction-system{border-left:4px solid #94a3b8}
   .card .desc{color:#cbd5e1;font-size:12.5px;margin-bottom:10px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .card .purpose{color:#cbd5e1;font-size:12.5px;margin-bottom:7px;line-height:1.45}
+  .card .purpose b,.card .desc b{color:var(--fg)}
   .card .meta{display:flex;flex-direction:column;gap:4px;border-top:1px dashed var(--line);padding-top:8px}
   .card .row{color:var(--muted);font-size:12px}
   .card .row b{color:var(--fg);font-weight:600}
@@ -82,16 +102,21 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>🗂 Командный дашборд процессов — канбан</h1>
+    <h1 id="pageTitle">🗂 Командный дашборд процессов</h1>
     <div class="updated" id="updated">загрузка…</div>
   </header>
 
+  <nav class="page-nav" aria-label="Разделы доски">
+    <a id="navActive" href="?view=active">▶️ Задачи в работе</a>
+    <a id="navOther" href="?view=other">⏸ Ожидают и завершены</a>
+  </nav>
+  <div class="page-note" id="pageNote"></div>
   <div class="stats" id="stats"></div>
   <div class="agent-filter" id="agentFilter"></div>
   <div class="agent-filter" id="runnerFilter"></div>
   <div class="kanban-scroll"><div class="kanban" id="kanban"></div></div>
 
-  <footer>Автообновление данных: ежедневно 07:15 · GitHub Pages · генерируется продюсером команды</footer>
+  <footer>Автообновление данных: ежедневно 06:00 МСК · GitHub Pages · источник: действующие кроны OpenClaw</footer>
 </div>
 
 <!-- Модальное окно -->
@@ -104,20 +129,20 @@
 
 <script>
 const STATUSES = [
-  {key:'pending',   label:'Ожидают',   color:'var(--yellow)', badge:'pending'},
-  {key:'active',    label:'В работе',  color:'var(--green)',  badge:'active'},
-  {key:'completed', label:'Завершены', color:'var(--blue)',   badge:'completed'},
+  {key:'pending',   label:'Ожидают',   card:'Ожидает',   color:'var(--yellow)', badge:'pending'},
+  {key:'active',    label:'В работе',  card:'В работе',  color:'var(--green)',  badge:'active'},
+  {key:'completed', label:'Завершены', card:'Завершена', color:'var(--blue)',   badge:'completed'},
 ];
 const AGENTS = [
   {id:'producer',  label:'🎬 Продюсер',  short:'Продюсер'},
-  {id:'scout',     label:'🔭 Scout',     short:'Scout'},
+  {id:'scout',     label:'🔭 Чак',       short:'Чак'},
   {id:'smm',       label:'📣 SMM',       short:'SMM'},
   {id:'analyst',   label:'📊 Аналитик',  short:'Аналитик'},
-  {id:'financier', label:'💰 Финансист', short:'Финансист'},
+  {id:'financier', label:'💰 Бобби',     short:'Бобби'},
   {id:'editor',    label:'✍️ Брайн',     short:'Брайн'},
   {id:'assistant', label:'🤝 Ассистент', short:'Ассистент'},
   {id:'main',      label:'🧠 Бос',       short:'Бос'},
-  {id:'security',  label:'🔐 Security',  short:'Security'},
+  {id:'security',  label:'🔐 Охранник',  short:'Охранник'},
 ];
 const RUNNERS = [
   {id:'all',    label:'Все'},
@@ -126,6 +151,14 @@ const RUNNERS = [
   {id:'task',   label:'📋 Задачи'},
 ];
 const RUNNER_LABEL = {cron:'🔄 Крон (OpenClaw, LLM)', script:'⚙️ Скрипт (crontab, без LLM)', task:'📋 Задача (ручная/разовая)'};
+const DIRECTIONS = [
+  {id:'fssp',       label:'ФССП',                     icon:'🔵', color:'#2563eb'},
+  {id:'securities', label:'Рынок ценных бумаг',       icon:'🟡', color:'#fbbf24'},
+  {id:'yana',       label:'Юридические услуги Яны',   icon:'🟢', color:'#22c55e'},
+  {id:'personal',   label:'Личностное развитие',      icon:'🔷', color:'#38bdf8'},
+  {id:'system',     label:'Система команды',           icon:'⚙️', color:'#94a3b8'},
+];
+const PAGE = new URLSearchParams(location.search).get('view') === 'other' ? 'other' : 'active';
 let DATA = {processes:[]};
 let agentFilter = 'all';
 let runnerFilter = 'all';
@@ -141,6 +174,15 @@ async function load(){
   render();
 }
 function render(){
+  const isActivePage = PAGE === 'active';
+  document.getElementById('navActive').classList.toggle('on', isActivePage);
+  document.getElementById('navOther').classList.toggle('on', !isActivePage);
+  document.getElementById('pageTitle').textContent = isActivePage
+    ? '▶️ Задачи в работе'
+    : '⏸ Ожидают и завершены';
+  document.getElementById('pageNote').textContent = isActivePage
+    ? 'Включённые процессы, сгруппированные по направлениям.'
+    : 'Отключённые, ожидающие запуска и окончательно завершённые задачи.';
   document.getElementById('updated').textContent = 'Обновлено: ' + (DATA.generated_at || '—');
   const counts = {active:0, pending:0, completed:0};
   DATA.processes.forEach(p => counts[p.status] = (counts[p.status]||0)+1);
@@ -148,12 +190,10 @@ function render(){
     `<div class="stat"><span style="width:10px;height:10px;border-radius:50%;background:${s.color};display:inline-block"></span><b style="color:${s.color}">${counts[s.key]||0}</b><span>${s.label}</span></div>`
   ).join('') + `<div class="stat"><b>${DATA.processes.length}</b><span>Всего</span></div>`;
 
-  // фильтр по агентам + типу запуска
-  let visible = DATA.processes;
+  // Отдельные страницы для активных и неактивных задач.
+  let visible = DATA.processes.filter(p => isActivePage ? p.status==='active' : p.status!=='active');
   if (agentFilter!=='all') visible = visible.filter(p => (p.agents||[]).includes(agentFilter));
   if (runnerFilter!=='all') visible = visible.filter(p => (p.runner||'task')===runnerFilter);
-  const agCounts = {active:0, pending:0, completed:0};
-  visible.forEach(p => agCounts[p.status] = (agCounts[p.status]||0)+1);
 
   const afBtns = `<span class="af-title">👤 Агент:</span>` +
     AGENTS.map(a => {
@@ -172,16 +212,14 @@ function render(){
     (runnerFilter!=='all' ? `<button class="af-clear" onclick="setRunner('all')">✕ сбросить</button>` : '');
   document.getElementById('runnerFilter').innerHTML = rfBtns;
 
-  const heading = agentFilter==='all'
-    ? ''
-    : ` — задачи агента <b>${(AGENTS.find(a=>a.id===agentFilter)||{}).label||agentFilter}</b>`;
-
-  document.getElementById('kanban').innerHTML = STATUSES.map(s => `
-    <div class="col ${s.key}">
-      <div class="col-head"><span style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;border-radius:50%;background:${s.color};display:inline-block"></span>${s.label}${heading}</span><span class="count">${agCounts[s.key]||0}</span></div>
-      ${visible.filter(p=>p.status===s.key).map(cardHtml).join('') || '<p style="color:var(--muted);font-size:12px;padding:8px">Пусто</p>'}
+  document.getElementById('kanban').innerHTML = DIRECTIONS.map(d => {
+    const cards = visible.filter(p => (p.direction||'system')===d.id);
+    return `
+    <div class="col direction-${d.id}">
+      <div class="col-head"><span style="display:flex;align-items:center;gap:8px"><span>${d.icon}</span>${d.label}</span><span class="count">${cards.length}</span></div>
+      ${cards.map(cardHtml).join('') || '<p style="color:var(--muted);font-size:12px;padding:8px">Нет задач</p>'}
     </div>
-  `).join('');
+  `}).join('');
 }
 function setAgent(id){
   agentFilter = id;
@@ -197,13 +235,17 @@ function cardHtml(p){
     ? '<span class="type-tag group">👥 Командный</span>'
     : '<span class="type-tag individual">🧑‍💻 Индивидуальный</span>';
   const rt = `<span class="runner-tag ${p.runner||'task'}">${RUNNER_LABEL[p.runner||'task']}</span>`;
+  const direction = DIRECTIONS.find(d=>d.id===(p.direction||'system')) || DIRECTIONS[DIRECTIONS.length-1];
+  const dt = `<span class="direction-tag ${p.direction||'system'}">${direction.icon} ${direction.label}</span>`;
   const ags = (p.agents||[]).map(a => (AGENTS.find(x=>x.id===a)||{short:a}).short).join(', ');
-  return `<div class="card" onclick="openModal('${p.id}')" title="Открыть описание">
-    <div class="top"><span class="name">${p.icon||'•'} ${p.name}</span><span class="badge ${b.badge}">${b.label}</span></div>
-    ${p.desc ? `<div class="desc">${p.desc}</div>` : ''}
-    ${t}${rt}
-    <div class="row" style="margin-top:6px;font-size:11px;color:var(--muted)">👤 <b style="color:var(--fg)">Агенты:</b> ${ags || '—'}</div>
+  return `<div class="card direction-${p.direction||'system'}" onclick="openModal('${p.id}')" title="Открыть описание">
+    <div class="top"><span class="name">${p.icon||'•'} ${p.name}</span><span class="badge ${b.badge}">${b.card}</span></div>
+    ${p.goal ? `<div class="purpose"><b>Для чего:</b> ${p.goal}</div>` : ''}
+    ${p.desc ? `<div class="desc"><b>Как работает:</b> ${p.desc}</div>` : ''}
+    ${t}${rt}${dt}
     <div class="meta">
+      <div class="row">🔗 <b>Цепочка:</b> ${p.chain || '—'}</div>
+      <div class="row">👥 <b>Исполнители:</b> ${ags || '—'}</div>
       <div class="row">🕐 <b>Расписание:</b> ${p.schedule}</div>
       <div class="row">✅ <b>Последний запуск:</b> ${p.last}</div>
     </div>
@@ -214,10 +256,12 @@ function openModal(id){
   const p = DATA.processes.find(x=>x.id===id);
   if(!p) return;
   const b = STATUSES.find(s=>s.key===p.status);
+  const direction = DIRECTIONS.find(d=>d.id===(p.direction||'system')) || DIRECTIONS[DIRECTIONS.length-1];
   document.getElementById('modalBody').innerHTML = `
     <div class="m-icon">${p.icon||'•'}</div>
     <div class="m-title">${p.name}</div>
-    <span class="m-badge ${b.badge}" style="background:${b.color}22;color:${b.color}">${b.label}</span>
+    <span class="m-badge ${b.badge}" style="background:${b.color}22;color:${b.color}">${b.card}</span>
+    <span class="direction-tag ${p.direction||'system'}">${direction.icon} ${direction.label}</span>
     ${p.type==='group'
       ? '<span class="m-badge" style="background:rgba(167,139,250,.15);color:#c4b5fd;margin-left:6px">👥 Командный (агенты под управлением продюсера)</span>'
       : '<span class="m-badge" style="background:rgba(148,163,184,.15);color:#94a3b8;margin-left:6px">🧑‍💻 Индивидуальный крон агента</span>'}

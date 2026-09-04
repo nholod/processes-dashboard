@@ -1,13 +1,20 @@
 #!/bin/bash
-# Обновление дашборда процессов на GitHub Pages.
-# Использование: ./update_dashboard.sh [commit_message]
-set -e
-cd /home/alexey/.openclaw/workspace-producer/dashboard
+# Сбор живых cron-данных OpenClaw и публикация дашборда на GitHub Pages.
+set -euo pipefail
 
-MSG="${1:-Обновление данных дашборда}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
 
-git add -A
-git -c user.name="nholod" -c user.email="nholod@gmail.com" commit -m "$MSG" >/dev/null 2>&1 || { echo "Нет изменений для коммита"; }
-git push origin main 2>&1 | tail -1
+python3 "$SCRIPT_DIR/generate_dashboard.py"
+
+git add data/processes.json generate_dashboard.py index.html update_dashboard.sh
+if git diff --cached --quiet; then
+  echo "OK: данные не изменились"
+  exit 0
+fi
+
+MSG="${1:-Автообновление данных $(date +%d.%m.%Y)}"
+git -c user.name="nholod" -c user.email="nholod@gmail.com" commit -m "$MSG"
+git push origin main
 
 echo "OK: дашборд обновлён — https://nholod.github.io/processes-dashboard/"
