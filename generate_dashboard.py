@@ -380,6 +380,112 @@ PROCESS_STEPS = {
     ],
 }
 
+# Дашборд опубликован на GitHub Pages, поэтому адреса перечисляются только из
+# явного безопасного списка. Приватные таблицы и внутренние системы отмечаются,
+# но их фактические URL в публичный JSON не попадают.
+GMAIL = ("Gmail", "https://mail.google.com/", "public")
+GOOGLE_CALENDAR = ("Google Calendar", "https://calendar.google.com/", "public")
+GOOGLE_SHEETS_PRIVATE = ("Google Sheets — рабочие таблицы", None, "private")
+OBSIDIAN_LOCAL = ("Obsidian — локальная база знаний", None, "local")
+MOEX_ISS = ("MOEX ISS API — рынок облигаций", "https://iss.moex.com/iss/engines/stock/markets/bonds", "public")
+
+PORTFOLIO_TG_RESOURCES = [
+    ("Telegram — GoodBonds", "https://t.me/GoodBonds", "public"),
+    ("Telegram — oblig_flood", "https://t.me/oblig_flood", "public"),
+    ("Telegram — Bonds_Wizzard_Chat", "https://t.me/Bonds_Wizzard_Chat", "public"),
+]
+
+PLACEMENT_RESOURCES = [
+    ("Smart-Lab — календарь облигаций", "https://smart-lab.ru/calendar/bonds/", "public"),
+    ("Cbonds — ближайшие размещения", "https://cbonds.ru/calendar/nearest_placements/", "public"),
+    ("Bonds Lab — размещения", "https://www.bonds-lab.ru/placements", "public"),
+    ("Корпоративные облигации — публичные размещения", "https://corpbonds.ru/public_offering", "public"),
+    ("Telegram — mozginvest", "https://t.me/mozginvest", "public"),
+    ("Telegram — barbados_bond", "https://t.me/barbados_bond", "public"),
+    ("Telegram — BondGPT_RU", "https://t.me/BondGPT_RU", "public"),
+]
+
+OFFICIAL_BOND_RESOURCES = [
+    MOEX_ISS,
+    ("НРД — новости", "https://nsddata.ru/ru/news/", "public"),
+    ("Центр раскрытия корпоративной информации", "https://www.e-disclosure.ru/", "public"),
+    ("Эксперт РА", "https://raexpert.ru/", "public"),
+]
+
+COMPETITOR_RESOURCES = [
+    ("Telegram — bankrotstvoVE", "https://t.me/bankrotstvoVE", "public"),
+    ("Telegram — sudpraktik_bankrot_demo", "https://t.me/sudpraktik_bankrot_demo", "public"),
+    ("Telegram — danilexpert", "https://t.me/danilexpert", "public"),
+    ("Telegram — rusrvz", "https://t.me/rusrvz", "public"),
+    ("Telegram — fssp_gov", "https://t.me/fssp_gov", "public"),
+    ("Telegram — fssp_sp", "https://t.me/fssp_sp", "public"),
+    ("VK — Услуги по банкротству", "https://vk.com/public183685628", "public"),
+    ("VK — Банкротство онлайн", "https://vk.com/bankrotstvo_online", "public"),
+    ("VK — Ситора Мажидова", "https://vk.com/sitora_mazhidova", "public"),
+    ("VK — ПЛАН Б", "https://vk.com/planb_bankrot", "public"),
+    ("VK — ФИКСБАНКРОТ", "https://vk.com/fixbankrot", "public"),
+    ("VK — UKFES", "https://vk.com/ukfes", "public"),
+    ("OK — Юрист для Людей", "https://ok.ru/group/55384451317910", "public"),
+    ("OK — Банкротство / списание долгов", "https://ok.ru/group/70000043606032", "public"),
+    ("OK — Юрист: списание долгов", "https://ok.ru/group/70000032312763", "public"),
+    ("OK — Банкротство по РФ", "https://ok.ru/group/53392011886739", "public"),
+    ("OK — Банкротство физических лиц", "https://ok.ru/group/70000000437557", "public"),
+    ("OK — Банкротство физических лиц 2", "https://ok.ru/group/70000048162255", "public"),
+    ("OK — Банкротство физических лиц 3", "https://ok.ru/group/70000043078157", "public"),
+    ("OK — Банкротство физических лиц 4", "https://ok.ru/group/70000004980700", "public"),
+    ("OK — Законное списание долгов", "https://ok.ru/group/70000041741826", "public"),
+    ("OK — Бизнес-Юрист", "https://ok.ru/group/70000001420593", "public"),
+    ("OK — Юрист Кристина", "https://ok.ru/group/70000003997432", "public"),
+    ("OK — Списание долгов", "https://ok.ru/group/70000043529653", "public"),
+    ("OK — Банкротство: малая группа", "https://ok.ru/group/70000051996106", "public"),
+    ("OK — Банкротство физических лиц 5", "https://ok.ru/group/70000043936642", "public"),
+    ("OK — Банкротство граждан", "https://ok.ru/group/53919425364107", "public"),
+    ("OK — Резиденция Права", "https://ok.ru/group/70000047316948", "public"),
+    ("OK — Finance Expert", "https://ok.ru/group/54099031687350", "public"),
+    ("OK — Фонд Защиты Должников", "https://ok.ru/group/60090904019025", "public"),
+    ("OK — Центр списания долгов", "https://ok.ru/group/70000006220383", "public"),
+    ("OK — Обнулим кредиты", "https://ok.ru/group/70000042529379", "public"),
+    ("OK — Банкротство физических лиц 6", "https://ok.ru/group/70000050042089", "public"),
+    ("OK — Адвокат: долги и суды", "https://ok.ru/group/70000049704180", "public"),
+]
+
+PROCESS_RESOURCES = {
+    "1682e60e-23cc-4b46-968f-ba4823dc8dff": [
+        GOOGLE_CALENDAR,
+        GMAIL,
+        OBSIDIAN_LOCAL,
+        ("Сервис прогноза погоды wttr.in", "https://wttr.in/", "public"),
+    ],
+    "4a38174c-a0b2-46bd-8e68-069f26deb1a0": [GOOGLE_SHEETS_PRIVATE, MOEX_ISS],
+    "379c1d61-e15b-4e3f-b3e0-fdede841c113": [GOOGLE_SHEETS_PRIVATE],
+    "c2f52127-3d5c-4bf5-901b-394831f8f4e9": [GOOGLE_SHEETS_PRIVATE],
+    "8912d0c3-11b2-45ca-be09-ee9a87320dec": [GOOGLE_SHEETS_PRIVATE, MOEX_ISS],
+    "6ce63cb3-31b8-42b3-a939-6fcfe63bd056": PLACEMENT_RESOURCES,
+    "5f8c4a86-5605-4c6d-8176-55ba3501bad4": PORTFOLIO_TG_RESOURCES,
+    "2d886b40-a26e-4890-806f-4c482eeaa509": [MOEX_ISS],
+    "4028d20f-3578-4fe0-8030-0355ca38b8c0": [
+        ("Публичный дашборд", "https://nholod.github.io/processes-dashboard/", "public"),
+        ("GitHub-репозиторий дашборда", "https://github.com/nholod/processes-dashboard", "public"),
+    ],
+    "5cb6b5f7-54ba-4e99-af90-f4dc8b2976d6": [
+        ("Telegram-канал Яны", "https://t.me/yanapravo", "public"),
+        ("Telegram Bot API", "https://api.telegram.org/", "public"),
+    ],
+    "543a5a38-fa7b-4a2d-8e6a-ee3d6844f664": [GMAIL],
+    "85192c8b-82c0-4e24-8d79-e2a15491764f": [GMAIL],
+    "180d8e2f-5863-42d8-9ef9-8fac4e31fae2": [
+        ("Дзен-канал Яны", "https://dzen.ru/id/6657b50d7e3fa97193655716", "public"),
+    ],
+    "ae444a2b-a797-4853-8229-d8891ec11d70": PORTFOLIO_TG_RESOURCES + OFFICIAL_BOND_RESOURCES,
+    "aca39778-4bf0-4c85-b98a-51b4bfe53afb": [
+        ("АРМ «Среда»", None, "private"),
+    ],
+    "8fc32d48-1677-4e5a-9024-2a8938d59767": COMPETITOR_RESOURCES,
+    "b4ad76b6-10a3-4fd7-86cf-c5f6a85f2aee": [
+        ("АРМ «Среда»", None, "private"),
+    ],
+}
+
 
 def direction_for(job_id: str) -> str:
     if job_id in FSSP_IDS:
@@ -496,6 +602,10 @@ def process_from_job(job: dict) -> dict:
     ]
     process["steps"] = [
         {"action": action, "actor": actor} for action, actor in raw_steps
+    ]
+    process["resources"] = [
+        {"label": label, "url": url, "access": access}
+        for label, url, access in PROCESS_RESOURCES.get(job_id, [])
     ]
     process["chain"] = " → ".join(
         f"{index}. {action} — {actor}"

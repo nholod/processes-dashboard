@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T20:08:46+03:00",
+  "generated_at": "2026-09-07T20:16:39+03:00",
   "summary": {
     "active": 21,
     "pending": 6,
@@ -34,6 +34,7 @@
           "actor": "Ассистент"
         }
       ],
+      "resources": [],
       "direction": "system"
     },
     {
@@ -72,6 +73,28 @@
           "actor": "Ассистент"
         }
       ],
+      "resources": [
+        {
+          "label": "Google Calendar",
+          "url": "https://calendar.google.com/",
+          "access": "public"
+        },
+        {
+          "label": "Gmail",
+          "url": "https://mail.google.com/",
+          "access": "public"
+        },
+        {
+          "label": "Obsidian — локальная база знаний",
+          "url": null,
+          "access": "local"
+        },
+        {
+          "label": "Сервис прогноза погоды wttr.in",
+          "url": "https://wttr.in/",
+          "access": "public"
+        }
+      ],
       "direction": "personal"
     },
     {
@@ -102,6 +125,7 @@
           "actor": "Ассистент"
         }
       ],
+      "resources": [],
       "direction": "system"
     },
     {
@@ -136,6 +160,7 @@
           "actor": "Ассистент"
         }
       ],
+      "resources": [],
       "direction": "system"
     },
     {
@@ -172,6 +197,18 @@
         {
           "action": "Сохранить неизменной среднюю цену покупки",
           "actor": "Бобби"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Google Sheets — рабочие таблицы",
+          "url": null,
+          "access": "private"
+        },
+        {
+          "label": "MOEX ISS API — рынок облигаций",
+          "url": "https://iss.moex.com/iss/engines/stock/markets/bonds",
+          "access": "public"
         }
       ],
       "direction": "securities"
@@ -217,6 +254,13 @@
           "actor": "Бобби"
         }
       ],
+      "resources": [
+        {
+          "label": "Google Sheets — рабочие таблицы",
+          "url": null,
+          "access": "private"
+        }
+      ],
       "direction": "personal"
     },
     {
@@ -254,6 +298,13 @@
         {
           "action": "Передать готовый отчёт Алексею",
           "actor": "Бобби"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Google Sheets — рабочие таблицы",
+          "url": null,
+          "access": "private"
         }
       ],
       "direction": "personal"
@@ -299,6 +350,18 @@
           "actor": "Бобби"
         }
       ],
+      "resources": [
+        {
+          "label": "Google Sheets — рабочие таблицы",
+          "url": null,
+          "access": "private"
+        },
+        {
+          "label": "MOEX ISS API — рынок облигаций",
+          "url": "https://iss.moex.com/iss/engines/stock/markets/bonds",
+          "access": "public"
+        }
+      ],
       "direction": "securities"
     },
     {
@@ -341,6 +404,43 @@
           "actor": "Бобби"
         }
       ],
+      "resources": [
+        {
+          "label": "Smart-Lab — календарь облигаций",
+          "url": "https://smart-lab.ru/calendar/bonds/",
+          "access": "public"
+        },
+        {
+          "label": "Cbonds — ближайшие размещения",
+          "url": "https://cbonds.ru/calendar/nearest_placements/",
+          "access": "public"
+        },
+        {
+          "label": "Bonds Lab — размещения",
+          "url": "https://www.bonds-lab.ru/placements",
+          "access": "public"
+        },
+        {
+          "label": "Корпоративные облигации — публичные размещения",
+          "url": "https://corpbonds.ru/public_offering",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — mozginvest",
+          "url": "https://t.me/mozginvest",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — barbados_bond",
+          "url": "https://t.me/barbados_bond",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — BondGPT_RU",
+          "url": "https://t.me/BondGPT_RU",
+          "access": "public"
+        }
+      ],
       "direction": "securities"
     },
     {
@@ -350,8 +450,8 @@
       "icon": "💰",
       "schedule": "Каждые 15 минут",
       "chain": "1. Собрать новые сообщения из облигационных Telegram-источников — Бобби → 2. Найти совпадения по ISIN, выпуску и эмитенту — Бобби → 3. Передать найденные цитаты без подмены смысла — Бобби → 4. Проверить результат и отправить одно сообщение Алексею — Продюсер",
-      "last": "07.09.2026 20:00 МСК — ошибка",
-      "next": "07.09.2026 20:15 МСК",
+      "last": "07.09.2026 20:15 МСК — успешно",
+      "next": "07.09.2026 20:30 МСК",
       "owner": "Бобби",
       "goal": "Не пропускать упоминания облигаций из портфелей Алексея.",
       "desc": "Бобби сохраняет новые сообщения, ищет совпадения по ISIN, выпуску и эмитенту и без анализа передаёт найденные цитаты Продюсеру. Продюсер отправляет одно сообщение Алексею.",
@@ -378,6 +478,23 @@
         {
           "action": "Проверить результат и отправить одно сообщение Алексею",
           "actor": "Продюсер"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Telegram — GoodBonds",
+          "url": "https://t.me/GoodBonds",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — oblig_flood",
+          "url": "https://t.me/oblig_flood",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — Bonds_Wizzard_Chat",
+          "url": "https://t.me/Bonds_Wizzard_Chat",
+          "access": "public"
         }
       ],
       "direction": "securities"
@@ -418,6 +535,13 @@
           "actor": "Бобби"
         }
       ],
+      "resources": [
+        {
+          "label": "MOEX ISS API — рынок облигаций",
+          "url": "https://iss.moex.com/iss/engines/stock/markets/bonds",
+          "access": "public"
+        }
+      ],
       "direction": "securities"
     },
     {
@@ -453,6 +577,7 @@
           "actor": "Бос"
         }
       ],
+      "resources": [],
       "direction": "securities"
     },
     {
@@ -488,6 +613,7 @@
           "actor": "Бос"
         }
       ],
+      "resources": [],
       "direction": "securities"
     },
     {
@@ -526,6 +652,18 @@
           "actor": "Бос"
         }
       ],
+      "resources": [
+        {
+          "label": "Публичный дашборд",
+          "url": "https://nholod.github.io/processes-dashboard/",
+          "access": "public"
+        },
+        {
+          "label": "GitHub-репозиторий дашборда",
+          "url": "https://github.com/nholod/processes-dashboard",
+          "access": "public"
+        }
+      ],
       "direction": "system"
     },
     {
@@ -535,8 +673,8 @@
       "icon": "🔐",
       "schedule": "Ежечасно в :10",
       "chain": "1. Запустить технический аудит сервера и конфигурации — Охранник → 2. Проверить и подтвердить найденные риски — Охранник → 3. При штатном результате не отправлять сообщение — Охранник → 4. При критическом риске уведомить Алексея — Охранник",
-      "last": "07.09.2026 19:10 МСК — успешно",
-      "next": "07.09.2026 20:10 МСК",
+      "last": "07.09.2026 20:10 МСК — успешно",
+      "next": "07.09.2026 21:10 МСК",
       "owner": "Охранник",
       "goal": "Рано обнаруживать угрозы и критические сбои OpenClaw.",
       "desc": "Охранник запускает аудит сервера и конфигурации каждый час. При штатном результате молчит, при подтверждённой критической проблеме сообщает Алексею.",
@@ -564,6 +702,7 @@
           "actor": "Охранник"
         }
       ],
+      "resources": [],
       "direction": "system"
     },
     {
@@ -602,6 +741,7 @@
           "actor": "Охранник"
         }
       ],
+      "resources": [],
       "direction": "system"
     },
     {
@@ -643,6 +783,18 @@
         {
           "action": "Проверить итог и сообщить окончательный статус",
           "actor": "Продюсер"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Telegram-канал Яны",
+          "url": "https://t.me/yanapravo",
+          "access": "public"
+        },
+        {
+          "label": "Telegram Bot API",
+          "url": "https://api.telegram.org/",
+          "access": "public"
         }
       ],
       "direction": "yana"
@@ -689,6 +841,13 @@
           "actor": "Продюсер"
         }
       ],
+      "resources": [
+        {
+          "label": "Gmail",
+          "url": "https://mail.google.com/",
+          "access": "public"
+        }
+      ],
       "direction": "fssp"
     },
     {
@@ -730,6 +889,13 @@
         {
           "action": "Проверить результат и доставить отчёт Алексею",
           "actor": "Продюсер"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Gmail",
+          "url": "https://mail.google.com/",
+          "access": "public"
         }
       ],
       "direction": "fssp"
@@ -783,6 +949,13 @@
           "actor": "Продюсер"
         }
       ],
+      "resources": [
+        {
+          "label": "Дзен-канал Яны",
+          "url": "https://dzen.ru/id/6657b50d7e3fa97193655716",
+          "access": "public"
+        }
+      ],
       "direction": "yana"
     },
     {
@@ -821,6 +994,7 @@
           "actor": "Продюсер"
         }
       ],
+      "resources": [],
       "direction": "system"
     },
     {
@@ -865,6 +1039,43 @@
           "actor": "Продюсер"
         }
       ],
+      "resources": [
+        {
+          "label": "Telegram — GoodBonds",
+          "url": "https://t.me/GoodBonds",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — oblig_flood",
+          "url": "https://t.me/oblig_flood",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — Bonds_Wizzard_Chat",
+          "url": "https://t.me/Bonds_Wizzard_Chat",
+          "access": "public"
+        },
+        {
+          "label": "MOEX ISS API — рынок облигаций",
+          "url": "https://iss.moex.com/iss/engines/stock/markets/bonds",
+          "access": "public"
+        },
+        {
+          "label": "НРД — новости",
+          "url": "https://nsddata.ru/ru/news/",
+          "access": "public"
+        },
+        {
+          "label": "Центр раскрытия корпоративной информации",
+          "url": "https://www.e-disclosure.ru/",
+          "access": "public"
+        },
+        {
+          "label": "Эксперт РА",
+          "url": "https://raexpert.ru/",
+          "access": "public"
+        }
+      ],
       "direction": "securities"
     },
     {
@@ -899,6 +1110,7 @@
           "actor": "Бос"
         }
       ],
+      "resources": [],
       "direction": "system"
     },
     {
@@ -939,6 +1151,13 @@
           "actor": "Продюсер"
         }
       ],
+      "resources": [
+        {
+          "label": "АРМ «Среда»",
+          "url": null,
+          "access": "private"
+        }
+      ],
       "direction": "fssp"
     },
     {
@@ -974,6 +1193,7 @@
           "actor": "Продюсер"
         }
       ],
+      "resources": [],
       "direction": "yana"
     },
     {
@@ -1011,6 +1231,178 @@
         {
           "action": "Отправить Алексею один итоговый отчёт",
           "actor": "Продюсер"
+        }
+      ],
+      "resources": [
+        {
+          "label": "Telegram — bankrotstvoVE",
+          "url": "https://t.me/bankrotstvoVE",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — sudpraktik_bankrot_demo",
+          "url": "https://t.me/sudpraktik_bankrot_demo",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — danilexpert",
+          "url": "https://t.me/danilexpert",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — rusrvz",
+          "url": "https://t.me/rusrvz",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — fssp_gov",
+          "url": "https://t.me/fssp_gov",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — fssp_sp",
+          "url": "https://t.me/fssp_sp",
+          "access": "public"
+        },
+        {
+          "label": "VK — Услуги по банкротству",
+          "url": "https://vk.com/public183685628",
+          "access": "public"
+        },
+        {
+          "label": "VK — Банкротство онлайн",
+          "url": "https://vk.com/bankrotstvo_online",
+          "access": "public"
+        },
+        {
+          "label": "VK — Ситора Мажидова",
+          "url": "https://vk.com/sitora_mazhidova",
+          "access": "public"
+        },
+        {
+          "label": "VK — ПЛАН Б",
+          "url": "https://vk.com/planb_bankrot",
+          "access": "public"
+        },
+        {
+          "label": "VK — ФИКСБАНКРОТ",
+          "url": "https://vk.com/fixbankrot",
+          "access": "public"
+        },
+        {
+          "label": "VK — UKFES",
+          "url": "https://vk.com/ukfes",
+          "access": "public"
+        },
+        {
+          "label": "OK — Юрист для Людей",
+          "url": "https://ok.ru/group/55384451317910",
+          "access": "public"
+        },
+        {
+          "label": "OK — Банкротство / списание долгов",
+          "url": "https://ok.ru/group/70000043606032",
+          "access": "public"
+        },
+        {
+          "label": "OK — Юрист: списание долгов",
+          "url": "https://ok.ru/group/70000032312763",
+          "access": "public"
+        },
+        {
+          "label": "OK — Банкротство по РФ",
+          "url": "https://ok.ru/group/53392011886739",
+          "access": "public"
+        },
+        {
+          "label": "OK — Банкротство физических лиц",
+          "url": "https://ok.ru/group/70000000437557",
+          "access": "public"
+        },
+        {
+          "label": "OK — Банкротство физических лиц 2",
+          "url": "https://ok.ru/group/70000048162255",
+          "access": "public"
+        },
+        {
+          "label": "OK — Банкротство физических лиц 3",
+          "url": "https://ok.ru/group/70000043078157",
+          "access": "public"
+        },
+        {
+          "label": "OK — Банкротство физических лиц 4",
+          "url": "https://ok.ru/group/70000004980700",
+          "access": "public"
+        },
+        {
+          "label": "OK — Законное списание долгов",
+          "url": "https://ok.ru/group/70000041741826",
+          "access": "public"
+        },
+        {
+          "label": "OK — Бизнес-Юрист",
+          "url": "https://ok.ru/group/70000001420593",
+          "access": "public"
+        },
+        {
+          "label": "OK — Юрист Кристина",
+          "url": "https://ok.ru/group/70000003997432",
+          "access": "public"
+        },
+        {
+          "label": "OK — Списание долгов",
+          "url": "https://ok.ru/group/70000043529653",
+          "access": "public"
+        },
+        {
+          "label": "OK — Банкротство: малая группа",
+          "url": "https://ok.ru/group/70000051996106",
+          "access": "public"
+        },
+        {
+          "label": "OK — Банкротство физических лиц 5",
+          "url": "https://ok.ru/group/70000043936642",
+          "access": "public"
+        },
+        {
+          "label": "OK — Банкротство граждан",
+          "url": "https://ok.ru/group/53919425364107",
+          "access": "public"
+        },
+        {
+          "label": "OK — Резиденция Права",
+          "url": "https://ok.ru/group/70000047316948",
+          "access": "public"
+        },
+        {
+          "label": "OK — Finance Expert",
+          "url": "https://ok.ru/group/54099031687350",
+          "access": "public"
+        },
+        {
+          "label": "OK — Фонд Защиты Должников",
+          "url": "https://ok.ru/group/60090904019025",
+          "access": "public"
+        },
+        {
+          "label": "OK — Центр списания долгов",
+          "url": "https://ok.ru/group/70000006220383",
+          "access": "public"
+        },
+        {
+          "label": "OK — Обнулим кредиты",
+          "url": "https://ok.ru/group/70000042529379",
+          "access": "public"
+        },
+        {
+          "label": "OK — Банкротство физических лиц 6",
+          "url": "https://ok.ru/group/70000050042089",
+          "access": "public"
+        },
+        {
+          "label": "OK — Адвокат: долги и суды",
+          "url": "https://ok.ru/group/70000049704180",
+          "access": "public"
         }
       ],
       "direction": "yana"
@@ -1054,6 +1446,13 @@
         {
           "action": "Принять снимок в аналитический контур",
           "actor": "Аналитик"
+        }
+      ],
+      "resources": [
+        {
+          "label": "АРМ «Среда»",
+          "url": null,
+          "access": "private"
         }
       ],
       "direction": "fssp"

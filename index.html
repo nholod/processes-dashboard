@@ -78,6 +78,11 @@
   .steps{margin:6px 0 0 19px;display:grid;gap:4px}
   .steps li{padding-left:2px}
   .steps .actor{color:var(--blue);font-weight:650}
+  .resources{color:#cbd5e1;font-size:12px;margin:8px 0 10px}
+  .resource-list{margin:6px 0 0 19px;display:grid;gap:4px}
+  .resource-list a{color:#7dd3fc;text-decoration:none;overflow-wrap:anywhere}
+  .resource-list a:hover{text-decoration:underline}
+  .resource-note{color:var(--muted);font-size:11px}
   .card .purpose{color:#cbd5e1;font-size:12.5px;margin-bottom:7px;line-height:1.45}
   .card .purpose b,.card .desc b{color:var(--fg)}
   .card .meta{display:flex;flex-direction:column;gap:4px;border-top:1px dashed var(--line);padding-top:8px}
@@ -239,6 +244,20 @@ function stepsHtml(p){
   if(!steps.length) return `<div>${p.chain || '—'}</div>`;
   return `<ol class="steps">${steps.map(s => `<li>${s.action} — <span class="actor">${s.actor}</span></li>`).join('')}</ol>`;
 }
+function resourcesHtml(p, compact=false){
+  const resources = p.resources || [];
+  if(!resources.length) return '';
+  const shown = compact ? resources.slice(0, 3) : resources;
+  const items = shown.map(r => {
+    if(r.url) return `<li><a href="${r.url}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${r.label}</a><br><span class="resource-note">${r.url}</span></li>`;
+    const note = r.access==='private' ? 'адрес скрыт: приватный ресурс' : 'локальный ресурс без внешнего адреса';
+    return `<li>${r.label}<br><span class="resource-note">${note}</span></li>`;
+  }).join('');
+  const more = compact && resources.length > shown.length
+    ? `<li class="resource-note">Ещё ресурсов: ${resources.length-shown.length} — полный список в подробном окне</li>`
+    : '';
+  return `<ul class="resource-list">${items}${more}</ul>`;
+}
 function cardHtml(p){
   const b = STATUSES.find(s=>s.key===p.status);
   const t = p.type==='group'
@@ -253,6 +272,7 @@ function cardHtml(p){
     ${p.goal ? `<div class="purpose"><b>Для чего:</b> ${p.goal}</div>` : ''}
     ${p.desc ? `<div class="desc"><b>Описание:</b> ${p.desc}</div>` : ''}
     <div class="workflow"><b>Как работает и цепочка:</b>${stepsHtml(p)}</div>
+    ${(p.resources||[]).length ? `<div class="resources"><b>🌐 Используемые ресурсы:</b>${resourcesHtml(p, true)}</div>` : ''}
     ${t}${rt}${dt}
     <div class="meta">
       <div class="row">👥 <b>Исполнители:</b> ${ags || '—'}</div>
@@ -285,6 +305,11 @@ function openModal(id){
       <div class="m-label">Как работает и цепочка</div>
       <div class="m-text">${stepsHtml(p)}</div>
     </div>
+
+    ${(p.resources||[]).length ? `<div class="m-block">
+      <div class="m-label">🌐 Используемые ресурсы</div>
+      <div class="m-text">${resourcesHtml(p, false)}</div>
+    </div>` : ''}
 
     <div class="m-grid">
       <div class="cell"><div class="m-label">🕐 Расписание</div><div class="m-text">${p.schedule}</div></div>
