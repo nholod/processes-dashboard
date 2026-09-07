@@ -73,7 +73,11 @@
   .card.direction-yana{border-left:4px solid #22c55e}
   .card.direction-personal{border-left:4px solid #38bdf8}
   .card.direction-system{border-left:4px solid #94a3b8}
-  .card .desc{color:#cbd5e1;font-size:12.5px;margin-bottom:10px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .card .desc{color:#cbd5e1;font-size:12.5px;margin-bottom:8px;line-height:1.5}
+  .card .workflow{color:#cbd5e1;font-size:12px;margin-bottom:10px;line-height:1.45}
+  .steps{margin:6px 0 0 19px;display:grid;gap:4px}
+  .steps li{padding-left:2px}
+  .steps .actor{color:var(--blue);font-weight:650}
   .card .purpose{color:#cbd5e1;font-size:12.5px;margin-bottom:7px;line-height:1.45}
   .card .purpose b,.card .desc b{color:var(--fg)}
   .card .meta{display:flex;flex-direction:column;gap:4px;border-top:1px dashed var(--line);padding-top:8px}
@@ -92,6 +96,7 @@
   .modal .m-block{margin-bottom:14px}
   .modal .m-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}
   .modal .m-text{font-size:14px;color:var(--fg);line-height:1.55}
+  .modal .steps{margin-top:7px;gap:7px}
   .modal .m-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   @media (max-width:600px){.modal .m-grid{grid-template-columns:1fr}}
   .modal .m-grid .cell{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
@@ -229,6 +234,11 @@ function setRunner(id){
   runnerFilter = id;
   render();
 }
+function stepsHtml(p){
+  const steps = p.steps || [];
+  if(!steps.length) return `<div>${p.chain || '—'}</div>`;
+  return `<ol class="steps">${steps.map(s => `<li>${s.action} — <span class="actor">${s.actor}</span></li>`).join('')}</ol>`;
+}
 function cardHtml(p){
   const b = STATUSES.find(s=>s.key===p.status);
   const t = p.type==='group'
@@ -241,10 +251,10 @@ function cardHtml(p){
   return `<div class="card direction-${p.direction||'system'}" onclick="openModal('${p.id}')" title="Открыть описание">
     <div class="top"><span class="name">${p.icon||'•'} ${p.name}</span><span class="badge ${b.badge}">${b.card}</span></div>
     ${p.goal ? `<div class="purpose"><b>Для чего:</b> ${p.goal}</div>` : ''}
-    ${p.desc ? `<div class="desc"><b>Как работает:</b> ${p.desc}</div>` : ''}
+    ${p.desc ? `<div class="desc"><b>Описание:</b> ${p.desc}</div>` : ''}
+    <div class="workflow"><b>Как работает и цепочка:</b>${stepsHtml(p)}</div>
     ${t}${rt}${dt}
     <div class="meta">
-      <div class="row">🔗 <b>Цепочка:</b> ${p.chain || '—'}</div>
       <div class="row">👥 <b>Исполнители:</b> ${ags || '—'}</div>
       <div class="row">🕐 <b>Расписание:</b> ${p.schedule}</div>
       <div class="row">✅ <b>Последний запуск:</b> ${p.last}</div>
@@ -271,12 +281,16 @@ function openModal(id){
       <div class="m-text">${p.desc || '—'}</div>
     </div>
 
+    <div class="m-block">
+      <div class="m-label">Как работает и цепочка</div>
+      <div class="m-text">${stepsHtml(p)}</div>
+    </div>
+
     <div class="m-grid">
       <div class="cell"><div class="m-label">🕐 Расписание</div><div class="m-text">${p.schedule}</div></div>
       <div class="cell"><div class="m-label">🎯 Цель</div><div class="m-text">${p.goal || '—'}</div></div>
       <div class="cell"><div class="m-label">👤 Ответственный</div><div class="m-text">${p.owner || '—'}</div></div>
       <div class="cell"><div class="m-label">⚙️ Тип запуска</div><div class="m-text">${RUNNER_LABEL[p.runner||'task'] || '—'}</div></div>
-      <div class="cell"><div class="m-label">🔗 Цепочка</div><div class="m-text">${p.chain}</div></div>
       <div class="cell"><div class="m-label">👥 Агенты-участники</div><div class="m-text">${(p.agents||[]).map(a => (AGENTS.find(x=>x.id===a)||{label:a}).label).join(', ') || '—'}</div></div>
       <div class="cell"><div class="m-label">✅ Последний запуск</div><div class="m-text">${p.last}</div></div>
       <div class="cell"><div class="m-label">⏭ Следующий</div><div class="m-text">${p.next}</div></div>
