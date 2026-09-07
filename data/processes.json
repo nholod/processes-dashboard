@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T11:27:23+03:00",
+  "generated_at": "2026-09-07T11:29:09+03:00",
   "summary": {
     "active": 21,
     "pending": 6,
@@ -393,7 +393,7 @@
         "producer"
       ],
       "runner": "cron",
-      "direction": "system"
+      "direction": "yana"
     },
     {
       "id": "4028d20f-3578-4fe0-8030-0355ca38b8c0",
