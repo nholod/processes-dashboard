@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T20:23:18+03:00",
+  "generated_at": "2026-09-07T20:26:45+03:00",
   "summary": {
     "active": 20,
     "pending": 7,
@@ -130,7 +130,7 @@
         }
       ],
       "resources": [],
-      "direction": "system"
+      "direction": "personal"
     },
     {
       "id": "4a38174c-a0b2-46bd-8e68-069f26deb1a0",
