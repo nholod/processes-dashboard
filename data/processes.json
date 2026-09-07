@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T20:32:52+03:00",
+  "generated_at": "2026-09-07T21:33:31+03:00",
   "summary": {
     "active": 19,
     "pending": 8,
@@ -414,16 +414,16 @@
     },
     {
       "id": "5f8c4a86-5605-4c6d-8176-55ba3501bad4",
-      "name": "Бобби — мониторинг Telegram-упоминаний портфеля",
+      "name": "Бобби — мониторинг упоминаний портфеля",
       "status": "active",
       "icon": "💰",
       "schedule": "Каждые 15 минут",
-      "chain": "1. Собрать новые сообщения из облигационных Telegram-источников — Бобби → 2. Найти совпадения по ISIN, выпуску и эмитенту — Бобби → 3. Передать найденные цитаты без подмены смысла — Бобби → 4. Проверить результат и отправить одно сообщение Алексею — Продюсер",
-      "last": "07.09.2026 20:30 МСК — успешно",
-      "next": "07.09.2026 20:45 МСК",
+      "chain": "1. Дочитать всё после сохранённого курсора в Telegram и Smart-Lab — Бобби → 2. Сохранить записи и обновить курсоры без пропусков и дублей — Бобби → 3. Найти совпадения по ISIN, выпуску и эмитенту — Бобби → 4. Передать найденные цитаты без подмены смысла — Бобби → 5. Проверить результат и отправить одно сообщение Алексею — Продюсер",
+      "last": "07.09.2026 21:00 МСК — успешно",
+      "next": "07.09.2026 21:45 МСК",
       "owner": "Бобби",
       "goal": "Не пропускать упоминания облигаций из портфелей Алексея.",
-      "desc": "Бобби сохраняет новые сообщения, ищет совпадения по ISIN, выпуску и эмитенту и без анализа передаёт найденные цитаты Продюсеру. Продюсер отправляет одно сообщение Алексею.",
+      "desc": "Бобби инкрементально сохраняет новые сообщения и публикации, ищет совпадения по ISIN, выпуску и эмитенту и без анализа передаёт найденные цитаты Продюсеру. Продюсер отправляет одно сообщение Алексею.",
       "notes": "ID: 5f8c4a86-5605-4c6d-8176-55ba3501bad4. Часовой пояс: Europe/Moscow. Задача включена.",
       "type": "group",
       "agents": [
@@ -433,7 +433,11 @@
       "runner": "cron",
       "steps": [
         {
-          "action": "Собрать новые сообщения из облигационных Telegram-источников",
+          "action": "Дочитать всё после сохранённого курсора в Telegram и Smart-Lab",
+          "actor": "Бобби"
+        },
+        {
+          "action": "Сохранить записи и обновить курсоры без пропусков и дублей",
           "actor": "Бобби"
         },
         {
@@ -463,6 +467,46 @@
         {
           "label": "Telegram — Bonds_Wizzard_Chat",
           "url": "https://t.me/Bonds_Wizzard_Chat",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — philippovich_bonds",
+          "url": "https://t.me/philippovich_bonds",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — ludomanechka",
+          "url": "https://t.me/ludomanechka",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — cbonds",
+          "url": "https://t.me/cbonds",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — probonds",
+          "url": "https://t.me/probonds",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — ivolgavdo",
+          "url": "https://t.me/ivolgavdo",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — marythebond",
+          "url": "https://t.me/marythebond",
+          "access": "public"
+        },
+        {
+          "label": "Smart-Lab — все блоги",
+          "url": "https://smart-lab.ru/allblog/",
+          "access": "public"
+        },
+        {
+          "label": "Smart-Lab — форум облигаций",
+          "url": "https://smart-lab.ru/bonds/",
           "access": "public"
         }
       ],
@@ -606,8 +650,8 @@
       "icon": "🔐",
       "schedule": "Ежечасно в :10",
       "chain": "1. Запустить технический аудит сервера и конфигурации — Охранник → 2. Проверить и подтвердить найденные риски — Охранник → 3. При штатном результате не отправлять сообщение — Охранник → 4. При критическом риске уведомить Алексея — Охранник",
-      "last": "07.09.2026 20:10 МСК — успешно",
-      "next": "07.09.2026 21:10 МСК",
+      "last": "07.09.2026 21:10 МСК — успешно",
+      "next": "07.09.2026 22:10 МСК",
       "owner": "Охранник",
       "goal": "Рано обнаруживать угрозы и критические сбои OpenClaw.",
       "desc": "Охранник запускает аудит сервера и конфигурации каждый час. При штатном результате молчит, при подтверждённой критической проблеме сообщает Алексею.",
@@ -1017,6 +1061,46 @@
         {
           "label": "Telegram — Bonds_Wizzard_Chat",
           "url": "https://t.me/Bonds_Wizzard_Chat",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — philippovich_bonds",
+          "url": "https://t.me/philippovich_bonds",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — ludomanechka",
+          "url": "https://t.me/ludomanechka",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — cbonds",
+          "url": "https://t.me/cbonds",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — probonds",
+          "url": "https://t.me/probonds",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — ivolgavdo",
+          "url": "https://t.me/ivolgavdo",
+          "access": "public"
+        },
+        {
+          "label": "Telegram — marythebond",
+          "url": "https://t.me/marythebond",
+          "access": "public"
+        },
+        {
+          "label": "Smart-Lab — все блоги",
+          "url": "https://smart-lab.ru/allblog/",
+          "access": "public"
+        },
+        {
+          "label": "Smart-Lab — форум облигаций",
+          "url": "https://smart-lab.ru/bonds/",
           "access": "public"
         },
         {

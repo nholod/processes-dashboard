@@ -45,9 +45,9 @@ AGENT_ICONS = {
 OVERRIDES = {
     "5f8c4a86-5605-4c6d-8176-55ba3501bad4": {
         "agents": ["financier", "producer"],
-        "chain": "Telegram-источники → Бобби → Продюсер → Алексей",
+        "chain": "Telegram и Smart-Lab → Бобби → Продюсер → Алексей",
         "goal": "Не пропускать упоминания облигаций из портфелей Алексея.",
-        "desc": "Бобби сохраняет новые сообщения, ищет совпадения по ISIN, выпуску и эмитенту и без анализа передаёт найденные цитаты Продюсеру. Продюсер отправляет одно сообщение Алексею.",
+        "desc": "Бобби инкрементально сохраняет новые сообщения и публикации, ищет совпадения по ISIN, выпуску и эмитенту и без анализа передаёт найденные цитаты Продюсеру. Продюсер отправляет одно сообщение Алексею.",
     },
     "d685700a-2456-4750-93af-9fa331dad2cd": {
         "chain": "Технические проверки → Охранник → Алексей при критическом риске",
@@ -269,7 +269,8 @@ PROCESS_STEPS = {
         ("Отправить итог Алексею", "Бобби"),
     ],
     "5f8c4a86-5605-4c6d-8176-55ba3501bad4": [
-        ("Собрать новые сообщения из облигационных Telegram-источников", "Бобби"),
+        ("Дочитать всё после сохранённого курсора в Telegram и Smart-Lab", "Бобби"),
+        ("Сохранить записи и обновить курсоры без пропусков и дублей", "Бобби"),
         ("Найти совпадения по ISIN, выпуску и эмитенту", "Бобби"),
         ("Передать найденные цитаты без подмены смысла", "Бобби"),
         ("Проверить результат и отправить одно сообщение Алексею", "Продюсер"),
@@ -395,6 +396,14 @@ PORTFOLIO_TG_RESOURCES = [
     ("Telegram — GoodBonds", "https://t.me/GoodBonds", "public"),
     ("Telegram — oblig_flood", "https://t.me/oblig_flood", "public"),
     ("Telegram — Bonds_Wizzard_Chat", "https://t.me/Bonds_Wizzard_Chat", "public"),
+    ("Telegram — philippovich_bonds", "https://t.me/philippovich_bonds", "public"),
+    ("Telegram — ludomanechka", "https://t.me/ludomanechka", "public"),
+    ("Telegram — cbonds", "https://t.me/cbonds", "public"),
+    ("Telegram — probonds", "https://t.me/probonds", "public"),
+    ("Telegram — ivolgavdo", "https://t.me/ivolgavdo", "public"),
+    ("Telegram — marythebond", "https://t.me/marythebond", "public"),
+    ("Smart-Lab — все блоги", "https://smart-lab.ru/allblog/", "public"),
+    ("Smart-Lab — форум облигаций", "https://smart-lab.ru/bonds/", "public"),
 ]
 
 PLACEMENT_RESOURCES = [
