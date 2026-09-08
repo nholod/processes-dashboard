@@ -310,6 +310,8 @@ function openModal(id){
     </div>
 
     ${p.notes ? `<div class="m-block"><div class="m-label">📌 Заметки / контекст</div><div class="m-notes m-text">${p.notes}</div></div>` : ''}
+
+    <div class="m-block"><div class="m-label">➕ Дополнительно</div><div class="m-notes m-text">${p.additional || '—'}</div></div>
   `;
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';

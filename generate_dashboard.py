@@ -45,9 +45,9 @@ AGENT_ICONS = {
 OVERRIDES = {
     "5f8c4a86-5605-4c6d-8176-55ba3501bad4": {
         "agents": ["financier"],
-        "chain": "Telegram и Smart-Lab → скрипт Бобби → шаблонное уведомление → Алексей",
+        "chain": "Telegram, Smart-Lab и ДОХОДЪ → скрипт Бобби → шаблонное уведомление → Алексей",
         "goal": "Не пропускать упоминания облигаций из портфелей Алексея.",
-        "desc": "Детерминированный скрипт Бобби сохраняет новые материалы, ищет совпадения по ISIN, выпуску и эмитенту и при наличии результата отправляет Алексею одно уведомление по фиксированному шаблону. Для каждого источника показывает ✅ при успешной проверке или 🚫 при ошибке. ИИ не используется.",
+        "desc": "Детерминированный скрипт Бобби проверяет 10 Telegram-источников, два раздела Smart-Lab и блог ДОХОДЪ, сохраняет новые материалы, ищет совпадения по ISIN, выпуску и эмитенту и при наличии результата отправляет Алексею одно уведомление по фиксированному шаблону. Для каждого источника показывает ✅ при успешной проверке или 🚫 при ошибке. ИИ не используется.",
     },
     "d685700a-2456-4750-93af-9fa331dad2cd": {
         "chain": "Технические проверки → Охранник → Алексей при критическом риске",
@@ -402,8 +402,10 @@ PORTFOLIO_TG_RESOURCES = [
     ("Telegram — probonds", "https://t.me/probonds", "public"),
     ("Telegram — ivolgavdo", "https://t.me/ivolgavdo", "public"),
     ("Telegram — marythebond", "https://t.me/marythebond", "public"),
+    ("Telegram — oblig_news", "https://t.me/oblig_news", "public"),
     ("Smart-Lab — все блоги", "https://smart-lab.ru/allblog/", "public"),
     ("Smart-Lab — форум облигаций", "https://smart-lab.ru/bonds/", "public"),
+    ("ДОХОДЪ — блог", "https://www.dohod.ru/blog", "public"),
 ]
 
 PLACEMENT_RESOURCES = [
@@ -578,6 +580,42 @@ def format_next(timestamp_ms: int | None, enabled: bool) -> str:
     return datetime.fromtimestamp(timestamp_ms / 1000, MOSCOW).strftime("%d.%m.%Y %H:%M МСК")
 
 
+def additional_label(job: dict) -> str:
+    payload = job.get("payload") or {}
+    payload_kind = payload.get("kind") or "не указан"
+    if payload_kind == "command":
+        execution = "детерминированная команда/скрипт без ИИ"
+    elif payload_kind == "agentTurn":
+        model = payload.get("model") or "модель агента по умолчанию"
+        execution = f"ИИ-задача ({model})"
+    elif payload_kind == "systemEvent":
+        execution = "системное событие основной сессии"
+    else:
+        execution = payload_kind
+
+    delivery = job.get("delivery") or {}
+    mode = delivery.get("mode") or "не указан"
+    if mode == "none":
+        delivery_text = "автоматическая доставка результата отключена"
+    elif mode == "announce":
+        destination = delivery.get("channel") or "канал текущей сессии"
+        account = delivery.get("accountId")
+        delivery_text = f"результат отправляется в {destination}" + (f" через {account}" if account else "")
+    elif mode == "webhook":
+        delivery_text = "результат отправляется через webhook"
+    else:
+        delivery_text = f"режим доставки: {mode}"
+
+    failure = job.get("failureAlert") or {}
+    if failure:
+        after = int(failure.get("after") or 1)
+        account = failure.get("accountId") or "аккаунт владельца"
+        failure_text = f"аварийное уведомление после {after} подряд ошибок через {account}"
+    else:
+        failure_text = "отдельное аварийное уведомление не настроено"
+    return f"Исполнение: {execution}. Доставка: {delivery_text}. Контроль сбоев: {failure_text}."
+
+
 def process_from_job(job: dict) -> dict:
     agent_id = job.get("agentId") or "main"
     owner = AGENTS.get(agent_id, agent_id)
@@ -601,6 +639,7 @@ def process_from_job(job: dict) -> dict:
         "desc": description,
         "notes": f"ID: {job_id}. Часовой пояс: {timezone}. "
         + ("Задача включена." if enabled else "Задача отключена."),
+        "additional": additional_label(job),
         "type": "individual",
         "agents": [agent_id],
         "runner": "cron",
