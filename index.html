@@ -106,6 +106,7 @@
   @media (max-width:600px){.modal .m-grid{grid-template-columns:1fr}}
   .modal .m-grid .cell{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
   .modal .m-notes{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.25);border-radius:10px;padding:10px 12px}
+  .modal .m-additional{white-space:pre-line}
   footer{color:var(--muted);font-size:12px;margin-top:24px;text-align:center}
 </style>
 </head>
@@ -311,7 +312,7 @@ function openModal(id){
 
     ${p.notes ? `<div class="m-block"><div class="m-label">📌 Заметки / контекст</div><div class="m-notes m-text">${p.notes}</div></div>` : ''}
 
-    <div class="m-block"><div class="m-label">➕ Дополнительно</div><div class="m-notes m-text">${p.additional || '—'}</div></div>
+    <div class="m-block"><div class="m-label">➕ Дополнительно</div><div class="m-notes m-additional m-text">${p.additional || '—'}</div></div>
   `;
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
