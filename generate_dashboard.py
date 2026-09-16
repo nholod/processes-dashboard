@@ -215,6 +215,7 @@ FSSP_IDS = {
 }
 
 SECURITIES_IDS = {
+    "fb0f2837-799d-463c-b1e4-4e1dfd11ca71",
     "5f8c4a86-5605-4c6d-8176-55ba3501bad4",
     "2d886b40-a26e-4890-806f-4c482eeaa509",
     "d5907fa6-2de9-4789-abe1-af8233ecd327",
