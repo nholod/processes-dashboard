@@ -227,6 +227,7 @@ SECURITIES_IDS = {
 }
 
 YANA_IDS = {
+    "fb2eb990-f68a-45e8-bf6f-302c92a68cee",
     "173f9a10-7374-43a3-a41e-9ad050382818",
     "5a02f09f-c60e-46ba-a260-b7c49de30356",
     "180d8e2f-5863-42d8-9ef9-8fac4e31fae2",
