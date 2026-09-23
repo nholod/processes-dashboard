@@ -565,6 +565,19 @@ def hhmm(hour: str, minute: str) -> str:
     return f"{int(hour):02d}:{int(minute):02d}"
 
 
+def daily_times(hour_field: str, minute: str) -> str | None:
+    """Format a cron hour field without failing on ranges or steps."""
+    parts = hour_field.split(",")
+    if all(part.isdigit() for part in parts):
+        return ", ".join(hhmm(part, minute) for part in parts)
+    if len(parts) == 1 and "-" in parts[0] and all(
+        value.isdigit() for value in parts[0].split("-", 1)
+    ):
+        start, end = parts[0].split("-", 1)
+        return f"{hhmm(start, minute)}–{hhmm(end, minute)}"
+    return None
+
+
 def schedule_label(schedule: dict) -> str:
     kind = schedule.get("kind")
     tz = schedule.get("tz") or "локальное время сервера"
@@ -580,8 +593,9 @@ def schedule_label(schedule: dict) -> str:
             if hour == dom == month == dow == "*" and minute.isdigit():
                 return f"Ежечасно в :{int(minute):02d}"
             if dom == month == dow == "*" and minute.isdigit():
-                times = [hhmm(h, minute) for h in hour.split(",")]
-                return "Ежедневно " + ", ".join(times) + suffix
+                times = daily_times(hour, minute)
+                if times:
+                    return "Ежедневно " + times + suffix
             if dom == month == "*" and dow in DAYS and minute.isdigit() and hour.isdigit():
                 return f"Еженедельно, {DAYS[dow]} {hhmm(hour, minute)}{suffix}"
             if month == dow == "*" and dom.isdigit() and minute.isdigit() and hour.isdigit():
