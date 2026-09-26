@@ -565,17 +565,40 @@ def hhmm(hour: str, minute: str) -> str:
     return f"{int(hour):02d}:{int(minute):02d}"
 
 
-def daily_times(hour_field: str, minute: str) -> str | None:
-    """Format a cron hour field without failing on ranges or steps."""
-    parts = hour_field.split(",")
-    if all(part.isdigit() for part in parts):
-        return ", ".join(hhmm(part, minute) for part in parts)
-    if len(parts) == 1 and "-" in parts[0] and all(
-        value.isdigit() for value in parts[0].split("-", 1)
-    ):
-        start, end = parts[0].split("-", 1)
-        return f"{hhmm(start, minute)}–{hhmm(end, minute)}"
-    return None
+def expand_cron_field(field: str, minimum: int, maximum: int) -> list[int]:
+    """Expand numeric cron lists, ranges and steps into sorted unique values."""
+    values: set[int] = set()
+    for item in field.split(","):
+        item = item.strip()
+        if not item:
+            raise ValueError("empty cron field item")
+
+        base, separator, step_text = item.partition("/")
+        step = int(step_text) if separator else 1
+        if step <= 0:
+            raise ValueError("cron step must be positive")
+
+        if base == "*":
+            start, end = minimum, maximum
+        elif "-" in base:
+            start_text, end_text = base.split("-", 1)
+            start, end = int(start_text), int(end_text)
+        else:
+            start = end = int(base)
+
+        if start < minimum or end > maximum or start > end:
+            raise ValueError(f"cron value outside {minimum}-{maximum}: {item}")
+        values.update(range(start, end + 1, step))
+
+    if not values:
+        raise ValueError("cron field produced no values")
+    return sorted(values)
+
+
+def cron_times(minute: str, hour: str) -> list[str]:
+    minutes = expand_cron_field(minute, 0, 59)
+    hours = expand_cron_field(hour, 0, 23)
+    return [f"{h:02d}:{m:02d}" for h in hours for m in minutes]
 
 
 def schedule_label(schedule: dict) -> str:
@@ -592,10 +615,19 @@ def schedule_label(schedule: dict) -> str:
                 return f"Каждые {minute[2:]} минут"
             if hour == dom == month == dow == "*" and minute.isdigit():
                 return f"Ежечасно в :{int(minute):02d}"
-            if dom == month == dow == "*" and minute.isdigit():
-                times = daily_times(hour, minute)
-                if times:
-                    return "Ежедневно " + times + suffix
+            if dom == month == dow == "*":
+                try:
+                    times = cron_times(minute, hour)
+                except ValueError:
+                    pass
+                else:
+                    if len(times) <= 24:
+                        return "Ежедневно " + ", ".join(times) + suffix
+                    if minute.startswith("*/"):
+                        return (
+                            f"Ежедневно каждые {minute[2:]} минут, "
+                            f"часы {hour}" + suffix
+                        )
             if dom == month == "*" and dow in DAYS and minute.isdigit() and hour.isdigit():
                 return f"Еженедельно, {DAYS[dow]} {hhmm(hour, minute)}{suffix}"
             if month == dow == "*" and dom.isdigit() and minute.isdigit() and hour.isdigit():
